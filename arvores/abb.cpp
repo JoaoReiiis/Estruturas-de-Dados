@@ -14,16 +14,16 @@ class ABB {
 private:
     Noh* raiz;
 
-    Noh* inserirRecAux(Noh* umNoh, int umValor) {
+    Noh* inserirAux(Noh* umNoh, int umValor) {
         if (umNoh == nullptr) {
             return new Noh(umValor);
         } else {
             if (umValor < umNoh->valor) {
-                Noh* novo = inserirRecAux(umNoh->esquerdo, umValor);
+                Noh* novo = inserirAux(umNoh->esquerdo, umValor);
                 umNoh->esquerdo = novo;
                 novo->pai = umNoh;
             } else {
-                Noh* novo = inserirRecAux(umNoh->direito, umValor);
+                Noh* novo = inserirAux(umNoh->direito, umValor);
                 umNoh->direito = novo;
                 novo->pai = umNoh;
             }
@@ -78,16 +78,16 @@ private:
         }
     }
 
-    Noh* removerRecAux(Noh* umNoh, int umValor) {
+    Noh* removerAux(Noh* umNoh, int umValor) {
         if (umNoh == nullptr) {
             cout << "Nó não encontrado!" << endl;
             return nullptr;
         }
 
         if (umValor < umNoh->valor) {
-            umNoh->esquerdo = removerRecAux(umNoh->esquerdo, umValor);
+            umNoh->esquerdo = removerAux(umNoh->esquerdo, umValor);
         } else if (umValor > umNoh->valor) {
-            umNoh->direito = removerRecAux(umNoh->direito, umValor);
+            umNoh->direito = removerAux(umNoh->direito, umValor);
         } else {
             if (umNoh->esquerdo == nullptr) {
                 Noh* temp = umNoh->direito;
@@ -100,16 +100,16 @@ private:
             } else {
                 Noh* sucessor = minimoAux(umNoh->direito);
                 umNoh->valor = sucessor->valor;
-                umNoh->direito = removerRecAux(umNoh->direito, sucessor->valor);
+                umNoh->direito = removerAux(umNoh->direito, sucessor->valor);
             }
         }
         return umNoh;
     }
 
-    void destruirNohRecursivamente(Noh* umNoh) {
+    void destruir(Noh* umNoh) {
         if (umNoh != nullptr) {
-            destruirNohRecursivamente(umNoh->esquerdo);
-            destruirNohRecursivamente(umNoh->direito);
+            destruir(umNoh->esquerdo);
+            destruir(umNoh->direito);
             delete umNoh;
         }
     }
@@ -120,11 +120,11 @@ public:
     }
 
     ~ABB() {
-        destruirNohRecursivamente(raiz);
+        destruir(raiz);
     }
 
-    void inserirRecursivamente(int umValor) {
-        raiz = inserirRecAux(raiz, umValor);
+    void inserir(int umValor) {
+        raiz = inserirAux(raiz, umValor);
     }
 
     void percorreEmOrdem() {
@@ -151,19 +151,19 @@ public:
         return maximoAux(raiz)->valor;
     }
 
-    void removerRecursivamente(int umValor) {
-        raiz = removerRecAux(raiz, umValor);
+    void remover(int umValor) {
+        raiz = removerAux(raiz, umValor);
     }
 };
 
 int main() {
     ABB arvore;
-    arvore.inserirRecursivamente(15);
-    arvore.inserirRecursivamente(6);
-    arvore.inserirRecursivamente(18);
-    arvore.inserirRecursivamente(1);
-    arvore.inserirRecursivamente(8);
-    arvore.inserirRecursivamente(21);
+    arvore.inserir(15);
+    arvore.inserir(6);
+    arvore.inserir(18);
+    arvore.inserir(1);
+    arvore.inserir(8);
+    arvore.inserir(21);
 
     cout << "Em ordem: ";
     arvore.percorreEmOrdem();
@@ -171,7 +171,7 @@ int main() {
     arvore.busca(8);
     arvore.busca(100);
 
-    arvore.removerRecursivamente(6);
+    arvore.remover(6);
     cout << "Após remoção: ";
     arvore.percorreEmOrdem();
 
