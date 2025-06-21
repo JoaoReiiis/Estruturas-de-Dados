@@ -1,4 +1,5 @@
 #include <iostream>
+
 using namespace std;
 
 struct Noh {
@@ -71,16 +72,30 @@ private:
     return n;
   }
 
-  Noh *inserirAux(Noh *node, int valor) {
-    if (!node) {
+  Noh *buscaAux(Noh *noh, int valor) {
+    if (noh == nullptr) {
+      return nullptr;
+    }
+    if (valor == noh->valor) {
+      return noh;
+    } else if (valor < noh->valor) {
+      return buscaAux(noh->esquerdo, valor);
+    } else {
+      return buscaAux(noh->direito, valor);
+    }
+  }
+
+  Noh *inserirAux(Noh *noh, int valor) {
+    if (noh == nullptr) {
       return new Noh(valor);
     }
-    if (valor < node->valor)
-      node->esquerdo = inserirAux(node->esquerdo, valor);
-    else
-      node->direito = inserirAux(node->direito, valor);
 
-    return balancear(node);
+    if (valor < noh->valor)
+      noh->esquerdo = inserirAux(noh->esquerdo, valor);
+    else
+      noh->direito = inserirAux(noh->direito, valor);
+
+    return balancear(noh);
   }
 
   Noh *removerMenor(Noh *raizsub) {
@@ -92,69 +107,146 @@ private:
     }
   }
 
-  Noh *removerAux(Noh *node, int valor) {
-    if (node == nullptr) {
-      cerr << "Noh não encontrado";
+  Noh *removerAux(Noh *noh, int valor) {
+    if (noh == nullptr) {
+      cerr << "Nó não encontrado" << endl;
+      return nullptr;
     }
 
-    Noh *novaRaizSubArvore = node;
+    Noh *novaRaizSubArvore = noh;
 
-    if (valor < node->valor) {
-      node->esquerdo = removerAux(node->esquerdo, valor);
-    } else if (valor > node->valor) {
-      node->direito = removerAux(node->direito, valor);
+    if (valor < noh->valor) {
+      noh->esquerdo = removerAux(noh->esquerdo, valor);
+    } else if (valor > noh->valor) {
+      noh->direito = removerAux(noh->direito, valor);
     } else {
-      if (node->esquerdo == nullptr) {
-        novaRaizSubArvore = node->direito;
-      } else if (node->direito == nullptr) {
-        novaRaizSubArvore = node->esquerdo;
+      if (noh->esquerdo == nullptr) {
+        novaRaizSubArvore = noh->direito;
+      } else if (noh->direito == nullptr) {
+        novaRaizSubArvore = noh->esquerdo;
       } else {
-        novaRaizSubArvore = sucessor(node);
-        novaRaizSubArvore->direito = removerMenor(node->direito);
-        novaRaizSubArvore->esquerdo = node->esquerdo;
+        novaRaizSubArvore = sucessor(noh);
+        novaRaizSubArvore->direito = removerMenor(noh->direito);
+        novaRaizSubArvore->esquerdo = noh->esquerdo;
       }
-      delete node;
+      delete noh;
     }
 
     return balancear(novaRaizSubArvore);
   }
 
-  Noh *sucessor(Noh *node) {
-    node = node->direito;
-    while (node->esquerdo != nullptr)
-      node = node->esquerdo;
-    return node;
+  Noh *sucessor(Noh *noh) {
+    noh = noh->direito;
+    while (noh->esquerdo != nullptr)
+      noh = noh->esquerdo;
+    return noh;
   }
 
-  void emOrdemAux(Noh *node) {
-    if (node) {
-      emOrdemAux(node->esquerdo);
-      cout << node->valor << " ";
-      emOrdemAux(node->direito);
+  /*Percorrimento em Ordem:
+  Ordem de Visita: Esquerda, Raiz, Direita.
+  Utilizado para acessar os elementos de uma árvore binária de busca em ordem
+  crescente.*/
+  void percorreEmOrdemAux(Noh *umNoh) {
+    if (umNoh != nullptr) {
+      percorreEmOrdemAux(umNoh->esquerdo);
+      cout << umNoh->valor << " ";
+      percorreEmOrdemAux(umNoh->direito);
     }
   }
 
-  void destruir(Noh *node) {
-    if (node == nullptr)
+  /*Percorrimento Pre-Ordem:
+  Ordem de Visita: Raiz, Esquerda, Direita.
+  A raiz é visitada primeiro, seguido pelos nós esquerda e direita. Útil para
+  operações como cópia de árvores.*/
+  void percorrePreOrdemAux(Noh *umNoh) {
+    if (umNoh != nullptr) {
+      cout << umNoh->valor << " ";
+      percorrePreOrdemAux(umNoh->esquerdo);
+      percorrePreOrdemAux(umNoh->direito);
+    }
+  }
+
+  /*Percorrimento Pos-Ordem:
+  Ordem de Visita: Esquerda, Direita, Raiz.
+  Visita os nós filhos antes do nó raiz, sendo útil em operações que precisam
+  processar os filhos antes da raiz.*/
+  void percorrePosOrdemAux(Noh *umNoh) {
+    if (umNoh != nullptr) {
+      percorrePosOrdemAux(umNoh->esquerdo);
+      percorrePosOrdemAux(umNoh->direito);
+      cout << umNoh->valor << " ";
+    }
+  }
+
+  Noh *minimoAux(Noh *noh) {
+    while (noh->esquerdo != nullptr) {
+      noh = noh->esquerdo;
+    }
+    return noh;
+  }
+
+  Noh *maximoAux(Noh *noh) {
+    while (noh->direito != nullptr) {
+      noh = noh->direito;
+    }
+    return noh;
+  }
+
+  void destruir(Noh *noh) {
+    if (noh == nullptr)
       return;
-    destruir(node->esquerdo);
-    destruir(node->direito);
-    delete node;
+    destruir(noh->esquerdo);
+    destruir(noh->direito);
+    delete noh;
   }
 
 public:
   AVL() : raiz(nullptr) {}
+
   ~AVL() {
     destruir(raiz);
     raiz = nullptr;
   }
-  void inserir(int valor) { raiz = inserirAux(raiz, valor); }
 
+  void inserir(int valor) { raiz = inserirAux(raiz, valor); }
   void remover(int valor) { raiz = removerAux(raiz, valor); }
 
-  void emOrdem() {
+  void busca(int valor) {
+    Noh *resultado = buscaAux(raiz, valor);
+    if (resultado == nullptr) {
+      cout << "Elemento não encontrado!!!" << endl;
+    } else {
+      cout << "Elemento encontrado: " << resultado->valor << endl;
+    }
+  }
+
+  int minimo() {
+    if (raiz == nullptr)
+      throw runtime_error("Árvore vazia");
+    return minimoAux(raiz)->valor;
+  }
+
+  int maximo() {
+    if (raiz == nullptr)
+      throw runtime_error("Árvore vazia");
+    return maximoAux(raiz)->valor;
+  }
+
+  void percorreEmOrdem() {
     cout << "Em ordem: ";
-    emOrdemAux(raiz);
+    percorreEmOrdemAux(raiz);
+    cout << endl;
+  }
+
+  void percorrePreOrdem() {
+    cout << "Pré-ordem: ";
+    percorrePreOrdemAux(raiz);
+    cout << endl;
+  }
+
+  void percorrePosOrdem() {
+    cout << "Pós-ordem: ";
+    percorrePosOrdemAux(raiz);
     cout << endl;
   }
 };
@@ -170,6 +262,15 @@ int main() {
   arvore.remover(30);
   arvore.inserir(25);
 
-  arvore.emOrdem();
+  arvore.percorreEmOrdem();
+  arvore.percorrePreOrdem();
+  arvore.percorrePosOrdem();
+
+  arvore.busca(25);
+  arvore.busca(30);
+
+  cout << "Mínimo: " << arvore.minimo() << endl;
+  cout << "Máximo: " << arvore.maximo() << endl;
+
   return 0;
 }

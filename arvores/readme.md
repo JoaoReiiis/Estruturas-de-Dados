@@ -11,8 +11,12 @@ Ambas suportam inserção e remoção recursiva e percurso em ordem (in-order). 
 
 - **Inserção recursiva**: adiciona novos nós mantendo as propriedades de busca.
 - **Remoção recursiva**: remove nós mantendo as propriedades de busca.
-- **Percurso em ordem**: visita nós em ordem crescente de valores.
+- **Percursos**:
+  - **Em Ordem (In-Ordem)**: visita nós em ordem crescente de valores (esquerda, raiz, direita).
+  - **Pré-Ordem (Pre-Ordem)**: visita a raiz primeiro, depois os nós esquerda e direita (raiz, esquerda, direita).
+  - **Pós-Ordem (Post-Ordem)**: visita os nós esquerda, depois direita e, finalmente, a raiz (esquerda, direita, raiz).
 - **Balanceamento (AVL)**: garante que a altura da árvore permaneça O(log n) após cada inserção.
+
 
 ## Instruções de Uso
 
