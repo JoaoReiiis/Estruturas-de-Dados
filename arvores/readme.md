@@ -1,11 +1,12 @@
-# ABB e AVL em C++
+# ABB, AVL e Árvores Rubro-Negras em C++
 
-Este repositório contém duas implementações em C++ de árvores de busca:
+Este repositório contém três implementações em C++ de árvores de busca:
 
 1. **Árvore Binária de Busca (ABB)**
 2. **Árvore AVL (AVL Tree)**
+3. **Árvore Rubro-Negra (Red-Black Tree)**
 
-Ambas suportam inserção e remoção recursiva e percurso em ordem (in-order). A versão AVL adiciona balanceamento automático através de rotações.
+Ambas suportam inserção e remoção recursiva e vários tipos de percorrimentos. A versão AVL adiciona balanceamento automático através de rotações, e a versão Rubro-Negra também utiliza balanceamento com propriedades específicas de coloração.
 
 ## Funcionalidades
 
@@ -16,25 +17,28 @@ Ambas suportam inserção e remoção recursiva e percurso em ordem (in-order). 
   - **Pré-Ordem (Pre-Ordem)**: visita a raiz primeiro, depois os nós esquerda e direita (raiz, esquerda, direita).
   - **Pós-Ordem (Post-Ordem)**: visita os nós esquerda, depois direita e, finalmente, a raiz (esquerda, direita, raiz).
 - **Balanceamento (AVL)**: garante que a altura da árvore permaneça O(log n) após cada inserção.
-
+- **Balanceamento (Rubro-Negra)**: mantém o balanceamento através de rotações e recolormento, garantindo que a árvore permaneça aproximadamente balanceada após cada inserção.
 
 ## Instruções de Uso
 
 1. **Compilar o código**:
 
-   ```bash
-   # Para ABB:
-   g++ -std=c++17 abb.cpp -o abb
+```bash
+# Para ABB:
+g++ -std=c++17 abb.cpp -o abb
 
-   # Para AVL:
-   g++ -std=c++17 avl.cpp -o avl
-   ```
+# Para AVL:
+g++ -std=c++17 avl.cpp -o avl
 
+# Para Árvore Rubro-Negra:
+g++ -std=c++17 rubro_negra.cpp -o rubro_negra
+```
 2. **Executar**:
 
    ```bash
    ./abb   # testando a ABB
    ./avl   # testando a AVL
+   ./rn    # testando a RN
    ```
 
    Cada programa insere um conjunto de valores pré-definidos, realiza o percurso em ordem e imprime o resultado.
@@ -89,3 +93,23 @@ fatorBalanceamento(n) = altura(n->esquerdo) - altura(n->direito)
 
 ---
 
+### 3. Árvore Rubro-Negra
+
+Árvore Rubro-Negra é uma árvore binária de busca balanceada, com as seguintes propriedades adicionais:
+
+    Todo nó é vermelho ou preto.
+    A raiz é sempre preta.
+    Todas as folhas (NIL) são pretas.
+    Se um nó é vermelho, então ambos os filhos são pretos (não há dois nós vermelhos consecutivos).
+    Para cada nó, todos os caminhos do nó até folhas descendentes contêm o mesmo número de nós pretos.
+
+Inserção:
+
+    Insere o nó como vermelho (exceto a raiz que deve ser preta).
+    Se o pai for vermelho, ajusta-se a árvore com rotações e mudanças de cor para manter as propriedades.
+
+Balanceamento:
+
+    Utiliza rotações (simples e duplas) e mudança de cores para manter as propriedades da árvore rubro-negra após a inserção.
+
+Complexidade: Operações de busca, inserção e remoção são executadas em O(log n) devido ao balanceamento mantido nas operações da árvore.
